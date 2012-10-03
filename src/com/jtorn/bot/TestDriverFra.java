@@ -1,20 +1,18 @@
 package com.jtorn.bot;
+
 import java.io.File;
+import java.util.List;
 import java.util.logging.Level;
 
-import com.DeathByCaptcha.Captcha;
-import com.DeathByCaptcha.SocketClient;
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlForm;
-import com.gargoylesoftware.htmlunit.html.HtmlImage;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlPasswordInput;
-import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
-import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
+import javax.imageio.ImageReader;
 
-public class TestDriver 
+import com.DeathByCaptcha.Captcha;
+import com.DeathByCaptcha.Client;
+import com.DeathByCaptcha.SocketClient;
+import com.gargoylesoftware.htmlunit.*;
+import com.gargoylesoftware.htmlunit.html.*;
+
+public class TestDriverFra 
 {
 
 	public static void main(String[] args)
