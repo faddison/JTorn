@@ -10,13 +10,13 @@ import com.DeathByCaptcha.Client;
 import com.DeathByCaptcha.SocketClient;
 
 
-class CaptchaSolver implements Runnable
+public class CaptchaSolver implements Runnable
 {
     protected Client _client = null;
     protected String _captchaFilename = null;
     private Captcha _captcha = null;
 
-    CaptchaSolver(Client client, String captchaFilename)
+    public CaptchaSolver(Client client, String captchaFilename)
     {
         this._client = client;
         this._captchaFilename = captchaFilename;

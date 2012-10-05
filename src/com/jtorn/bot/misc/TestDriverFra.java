@@ -1,4 +1,4 @@
-package com.jtorn.bot;
+package com.jtorn.bot.misc;
 
 import java.io.File;
 import java.util.List;
@@ -11,6 +11,7 @@ import com.DeathByCaptcha.Client;
 import com.DeathByCaptcha.SocketClient;
 import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.html.*;
+import com.jtorn.bot.CaptchaSolver;
 
 public class TestDriverFra 
 {
