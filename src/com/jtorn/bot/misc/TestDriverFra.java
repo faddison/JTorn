@@ -27,16 +27,19 @@ public class TestDriverFra
 			System.out.println("Starting application...");
 			java.util.logging.Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF);
 			
-			wc = new WebClient(BrowserVersion.FIREFOX_10, "50.117.67.126", 3131);
+			wc = new WebClient(BrowserVersion.FIREFOX_10);
+			//wc = new WebClient(BrowserVersion.FIREFOX_10, "50.117.67.126", 3131);
 		    final DefaultCredentialsProvider scp = new DefaultCredentialsProvider();
 		    scp.addCredentials("754d539bc6ade1ad", "454585f105747a76");
-		    wc.setCredentialsProvider(scp);
+		    //wc.setCredentialsProvider(scp);
 			wc.setJavaScriptEnabled(false);
+			wc.setThrowExceptionOnScriptError(false);
+			wc.setThrowExceptionOnFailingStatusCode(false);
 			
 		    // Get the first page
 		    HtmlPage page = wc.getPage("http://torn.com/index.php");
 		    if (page.asText().contains("You are no longer logged in."))
-		    	page = login(page, "Bier", "nibodi70");
+		    	page = login(page, "tempaccount", "temp123");
 		    else
 		    	System.out.println("Already logged in.");
 		    	
@@ -57,8 +60,9 @@ public class TestDriverFra
 			    	}
 			    	else
 			    	{
-			    		System.out.println("Loading gym...");
-			    		page = wc.getPage("http://torn.com/gym.php");
+			    		System.out.println("Loading crimes...");
+			    		wc.setJavaScriptEnabled(true);
+			    		page = wc.getPage("http://torn.com/crimes.php");
 					    while (onCaptcha(page))
 					    {
 					    	wc.setJavaScriptEnabled(true);
@@ -67,7 +71,8 @@ public class TestDriverFra
 						    wc.setJavaScriptEnabled(false);
 					    }
 					    //System.out.println(page.getWebResponse().getContentAsString());
-					    trainStrength(page, 20);
+					    //trainStrength(page, 20);
+					    doCrime(page, 5);
 					    System.out.println("Sleeping 30 minutes...");
 					    Thread.sleep(1000*30*60);
 					    
@@ -89,6 +94,21 @@ public class TestDriverFra
 		{
 			wc.closeAllWindows();
 			e.printStackTrace();
+		}
+	}
+	
+	public static void doCrime(HtmlPage page, int amount) throws FailingHttpStatusCodeException, MalformedURLException, IOException
+	{
+		
+		System.out.println("Committing crimes...");
+		//System.out.println(page.getWebResponse().getContentAsString());
+		for (int i = 1; i < amount+1; i++)
+		{
+			System.out.print("Crime "+i+"...");
+			ScriptResult sr;
+			sr = page.executeJavaScript("document.getElementById('1').checked=true; document.crimes.submit();void(0);");
+			sr = page.executeJavaScript("document.getElementById('1').checked=true; document.crimes.submit();void(0);");
+			page = wc.getPage("http://torn.com/crimes.php");
 		}
 	}
 	
