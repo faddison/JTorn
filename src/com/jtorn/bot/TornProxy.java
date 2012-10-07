@@ -33,14 +33,15 @@ public class TornProxy
 	
 	public TornProxy(String address, String port)
 	{
-		this.type = "";
 		this.address = address;
 		this.port = port;
-		this.username = "";
-		this.password = "";
-		this.lastScanned = "";
-		this.status = "";
-		
+	}
+	
+	public TornProxy(String address, String port, String username, String password)
+	{
+		this(address, port);
+		this.username = username;
+		this.password = password;
 	}
 
 	/**
