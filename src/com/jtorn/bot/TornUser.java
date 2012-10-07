@@ -25,56 +25,56 @@ public class TornUser
 	/**
 	 * @return the username
 	 */
-	private String getUsername() {
+	public String getUsername() {
 		return username;
 	}
 
 	/**
 	 * @param username the username to set
 	 */
-	private void setUsername(String username) {
+	public void setUsername(String username) {
 		this.username = username;
 	}
 
 	/**
 	 * @return the password
 	 */
-	private String getPassword() {
+	public String getPassword() {
 		return password;
 	}
 
 	/**
 	 * @param password the password to set
 	 */
-	private void setPassword(String password) {
+	public void setPassword(String password) {
 		this.password = password;
 	}
 
 	/**
 	 * @return the email
 	 */
-	private String getEmail() {
+	public String getEmail() {
 		return email;
 	}
 
 	/**
 	 * @param email the email to set
 	 */
-	private void setEmail(String email) {
+	public void setEmail(String email) {
 		this.email = email;
 	}
 
 	/**
 	 * @return the proxy
 	 */
-	private TornProxy getProxy() {
+	public TornProxy getProxy() {
 		return proxy;
 	}
 
 	/**
 	 * @param proxy the proxy to set
 	 */
-	private void setProxy(TornProxy proxy) {
+	public void setProxy(TornProxy proxy) {
 		this.proxy = proxy;
 	}
 	
