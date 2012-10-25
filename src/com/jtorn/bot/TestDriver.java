@@ -23,8 +23,10 @@ public class TestDriver
 		{
 			HtmlElement element;
 			java.util.logging.Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF);
-			final WebClient wc = new WebClient(BrowserVersion.FIREFOX_3_6);
-			wc.setJavaScriptEnabled(true);
+			final WebClient wc = new WebClient(BrowserVersion.FIREFOX_10);
+			wc.setJavaScriptEnabled(false);
+			wc.setThrowExceptionOnFailingStatusCode(false);
+			wc.setThrowExceptionOnScriptError(false);
 			
 		    // Get the first page
 		    HtmlPage page = wc.getPage("http://torn.com/login");
@@ -40,23 +42,24 @@ public class TestDriver
 		    HtmlTextInput textField = form.getInputByName("player");
 	
 		    // Change the value of the text field
-		    textField.setValueAttribute("trialaccount");
+		    textField.setValueAttribute("tempaccount");
 		    
 		    final HtmlPasswordInput passwordField = form.getInputByName("password");
 			
 		    // Change the value of the text field
-		    passwordField.setValueAttribute("");
+		    passwordField.setValueAttribute("temp123");
 	
 		    // Now submit the form by clicking the button and get back the second page.
 		    page = button.click();
-		    
 		    page = wc.getPage("http://torn.com/index.php");
 		    System.out.println(page.asText());
 		    System.out.println("-----------------------------------------------------");
+
 		    
 		    page = wc.getPage("http://torn.com/crimes.php");
 		    page = wc.getPage("http://torn.com/crimes.php?bypass=1");
 
+		    /*
 		    HtmlImage captchaImage = (HtmlImage) page.getElementById("recaptcha_image").getFirstChild();
 		    captchaImage.saveAs(new File("captcha-image.jpg"));
 		    
@@ -74,7 +77,7 @@ public class TestDriver
 		    System.out.println(page.asText());		    
 		    System.out.println("-----------------------------------------------------");
 		    
-		    
+		    */
 		    wc.closeAllWindows();
 		}
 		catch (Exception e)

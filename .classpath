@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="libs/dbc_api_v4_2_java"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="lib" path="D:/workspace/JTorn/libs/htmlunit-2.10/lib/commons-codec-1.6.jar"/>
 	<classpathentry kind="lib" path="D:/workspace/JTorn/libs/htmlunit-2.10/lib/commons-collections-3.2.1.jar"/>
 	<classpathentry kind="lib" path="D:/workspace/JTorn/libs/htmlunit-2.10/lib/commons-io-2.2.jar"/>
@@ -28,5 +27,6 @@
 	<classpathentry kind="lib" path="D:/downloads/libs/jsoup-1.6.1-javadoc.jar"/>
 	<classpathentry kind="lib" path="D:/downloads/libs/jsoup-1.6.1-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre6"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

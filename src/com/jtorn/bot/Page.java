@@ -34,7 +34,7 @@ abstract class Page{
 		{
 			prop.load(in);
 			classUrl = prop.getProperty(this.getClass().getSimpleName());
-			if (classUrl == "");
+			if (classUrl == "")
 				throw new NullPointerException();
 		} 
 		catch (IOException e) 

@@ -30,6 +30,7 @@ public class Test {
 		wc.setJavaScriptEnabled(false);
 		
 	    // Get the first page
+	    //HtmlPage page = wc.getPage("file://D:/torncity/offline-gym.html");
 	    HtmlPage page = wc.getPage("file://D:/torncity/offline-gym.html");
 	    //HtmlPage page = wc.getPage("file://D:/workspace/JTorn/files/offline-docrime2.html");
 	    
@@ -40,16 +41,22 @@ public class Test {
 //			System.out.println(e.toString());
 //		}
 	    
+	    //System.out.println(page.asXml().contains(("Please Validate").toString()));
+	   // System.out.println(page.asXml());
+	    System.out.println(page.asText());
+	    
+	    /*
 	    for (DomNode n: page.getElementById("divStrength").getDescendants())
 		{
 			//System.out.println(n.toString());
 			if (n.toString().contains("HtmlTextInput[<input type=\"text\" value=\"1\" id=\"t\" name=\"t\">]"))
 			{
-				HtmlTextInput input = (HtmlTextInput) n;
-				System.out.println(input.toString());
+				 = (HtmlTextInput) n;
+				input.setValueAttribute(amount);
 			}
 			
 		}
+		*/
 		
 	    
 	    /*

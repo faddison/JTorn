@@ -60,9 +60,10 @@ public class TestDriverFra
 			    	}
 			    	else
 			    	{
-			    		System.out.println("Loading crimes...");
+			    		System.out.println("Loading page...");
 			    		wc.setJavaScriptEnabled(true);
-			    		page = wc.getPage("http://torn.com/crimes.php");
+			    		page = wc.getPage("http://torn.com/gym.php");
+			    		//page = wc.getPage("http://torn.com/crimes.php");
 					    while (onCaptcha(page))
 					    {
 					    	wc.setJavaScriptEnabled(true);
@@ -71,10 +72,10 @@ public class TestDriverFra
 						    wc.setJavaScriptEnabled(false);
 					    }
 					    //System.out.println(page.getWebResponse().getContentAsString());
-					    //trainStrength(page, 20);
-					    doCrime(page, 5);
+					    trainStrength(page, 20);
+					    //doCrime(page, 5);
 					    System.out.println("Sleeping 30 minutes...");
-					    Thread.sleep(1000*30*60);
+					    Thread.sleep(1000*15);
 					    
 				    }
 			    	page = loadIndex();
@@ -212,11 +213,34 @@ public class TestDriverFra
 	
 	public static HtmlPage trainStrength(HtmlPage page, int amount) throws IOException
 	{
-		System.out.println("Training "+amount+" strength...");
+		System.out.println("Training " + amount + " strength...");
+		for (DomNode n: page.getElementById("divStrength").getDescendants())
+		{
+			//System.out.println(n.toString());
+			HtmlTextInput textInput;
+			HtmlSubmitInput submitInput;
+			if (n.toString().contains("HtmlTextInput[<input type=\"text\" value=\"1\" id=\"t\" name=\"t\">]"))
+			{
+				textInput = (HtmlTextInput) n;
+				textInput.setValueAttribute(Integer.toString(amount));
+				System.out.println(textInput.toString());
+			}
+			else if (n.toString().contains("HtmlSubmitInput[<input type=\"submit\" value=\"Train\">]"))
+			{
+				submitInput = (HtmlSubmitInput) n;
+				page = submitInput.click();
+				System.out.println(submitInput.toString());
+			}
+			
+		}
+		/*
+		System.out.println(this.user.getUsername()+"-"+"Training "+amount+" strength...");
 		HtmlTextInput amountInput = (HtmlTextInput) page.getByXPath("/html/body/div[4]/table/tbody/tr/td[2]/center/div[2]/div/div[2]/div[3]/div[1]/div[1]/div[2]/form/table/tbody/tr/td[1]/input[1]").get(0);
 		amountInput.setValueAttribute(Integer.toString(amount));
 		HtmlElement e = (HtmlElement) page.getByXPath("/html/body/div[4]/table/tbody/tr/td[2]/center/div[2]/div/div[2]/div[3]/div[1]/div[1]/div[2]/form/table/tbody/tr/td[3]/input").get(0);
 		e.click();
+		*/
+		System.out.println(page.asText());
 		return page;
 	}
 	
