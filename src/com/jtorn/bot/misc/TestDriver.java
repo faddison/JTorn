@@ -1,4 +1,4 @@
-package com.jtorn.bot;
+package com.jtorn.bot.misc;
 import java.io.File;
 import java.util.logging.Level;
 
