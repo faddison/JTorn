@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Stack;
 import java.util.concurrent.Executor;
 
+import com.jtorn.bot.TornBot;
 import com.jtorn.bot.TornProxy;
 import com.jtorn.bot.TornUser;
 
