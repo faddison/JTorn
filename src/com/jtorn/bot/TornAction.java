@@ -85,6 +85,24 @@ public class TornAction{
 		return wc.getPage(url);
 	}
 	
+	public int extractTravelMinutes(HtmlPage page)
+	{
+		System.out.println("Extracting remaining travel time...");
+		String[] words = ((HtmlElement) page.getByXPath("/html/body/div[3]/center/table/tbody/tr/td/center").get(0)).asText().split(" ");
+	    int minutes = -1;
+		for (int i = 0; i < words.length; i++)
+	    {
+			//System.out.println(words[i]);
+	    	if (words[i].toLowerCase().contains("minute"))
+	    		minutes = Integer.parseInt(words[i-1]);
+	    }
+		if (minutes > -1)
+			System.out.println("Eta is "+ minutes+" minutes.");
+		else 
+			System.out.println("Unable to extract Eta.");
+	    return minutes;
+	}
+	
 	public HtmlPage login(HtmlPage page, String username, String password) {
 		// wc.setJavaScriptEnabled(true);
 		int attempts = 0;
@@ -226,6 +244,37 @@ public class TornAction{
 		return page;
 	}
 	
+	public HtmlPage trainStrength(HtmlPage page, int amount) throws Exception {
+		System.out.println("Training " + amount + " Strength...");
+		page = wc.getPage("http://torn.com/gym.php");
+		if (onCaptcha(page))
+			page = solveCaptcha(page);
+		// System.out.println(page.getWebResponse().getContentAsString());
+		HtmlTextInput textInput = null;
+		HtmlSubmitInput submitInput = null;
+		for (DomNode n : page.getElementById("divStrength").getDescendants()) {
+			// System.out.println(n.toString());
+			if (n.toString().contains("id=\"t\" name=\"t\">]")) {
+				textInput = (HtmlTextInput) n;
+				textInput.setValueAttribute(Integer.toString(amount));
+				// System.out.println(textInput.toString());
+			} else if (n.toString().contains(
+					"HtmlSubmitInput[<input type=\"submit\" value=\"Train\">]")) {
+				submitInput = (HtmlSubmitInput) n;
+				page = submitInput.click();
+				// System.out.println(submitInput.toString());
+			}
+		}
+		if (textInput == null)
+			throw new ElementNotFoundException("trainStrength", "textInput",
+					"HtmlTextInput[<input type=\"text\" value=\"1\" id=\"t\" name=\"t\">]");
+		if (submitInput == null)
+			throw new ElementNotFoundException("trainStrength", "submitInput",
+					"HtmlSubmitInput[<input type=\"submit\" value=\"Train\">]");
+
+		return page;
+	}
+	
 	public void abort() 
 	{
 		System.out.println(this.user.getUsername() + "-"
@@ -313,7 +362,7 @@ public class TornAction{
 			login(page, user.getUsername(), user.getPassword());
 		page = loadIndex();
 		if (onCaptcha(page))
-			solveCaptcha(page);
+			page = solveCaptcha(page);
 		writeAbroad(page.asXml());
 		page = wc
 				.getPage("http://www.torn.com/holder.php?case=buyItem&ID="+flowerId+"&action=confirm&jsoff=none&ID2=");

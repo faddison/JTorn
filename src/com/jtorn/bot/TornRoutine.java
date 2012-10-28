@@ -26,28 +26,70 @@ public class TornRoutine
 		return this.action;
 	}
 	
-	public void flowerRunning()
+
+	public enum RoutineType
 	{
-		int travel_time = TornConstants.time_argentina;
-		String country_id = TornConstants.argentina;
-		String flower_id = TornConstants.ceibo_flower;
+		FLOWERS, SIMPLE
+	}
+	
+	public HtmlPage simpleRoutine(HtmlPage page, String[] args) throws Exception
+	{
+		page = action.trainStrength(page, 20);
+		return page;
+	}
+	
+	public HtmlPage flowerRoutine(HtmlPage page, String[] args) throws Exception
+	{
 		
+		String country_id = args[0];
+		String flower_id = args[1];
+		int travel_time = Integer.parseInt(args[2]);
+		
+		if (page.asXml().toLowerCase().contains("you are travelling..."))
+			page = action.loadIndex();
+		if (action.onCaptcha(page))
+			page = action.solveCaptcha(page);
+		if (page.asText().toLowerCase().contains(TornConstants.travelling))
+		{	
+			System.out.println("Currently travelling.");
+			int remainingTime = action.extractTravelMinutes(page);
+			if (remainingTime < 0)
+				remainingTime = 4;
+			System.out.println("Sleeping for "+ (remainingTime+1) +" minutes...");
+			Thread.sleep(1000*60*(remainingTime++));
+		}
+		else if (page.asText().toLowerCase().contains(TornConstants.atStoreAbroad))
+		{
+			System.out.println("At store abroad.");
+			page = action.buyAnyFlowers(page, 21,flower_id);
+			page = action.travelHome(page);
+			System.out.println("Sleeping "+travel_time+" minutes...");
+			Thread.sleep(1000*travel_time*60);
+		}
+		else if (page.asText().toLowerCase().contains(TornConstants.atHome))
+		{
+			action.writeProfile(page.asXml());
+			action.writeItems(action.loadItems().asXml());
+			page = action.trainDefence(page, 20);
+			System.out.println("Starting new flower run...");
+			page = action.runAnyFlowers(page, 21,country_id,flower_id,travel_time);
+		}
+		else
+			throw new Exception("Unknown State");
+		System.out.println("Completed flower run.");
+		return page;
+	}
+	
+	public void mainRoutine(RoutineType routineType, String[] args)
+	{	
 		try
 		{
 			System.out.println(this.user.getUsername()+"-"+"Starting application...");
 			java.util.logging.Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF);
+			System.out.println(this.user.getUsername()+"-"+"Loading Torn...");
 			HtmlPage page = wc.getPage("http://torn.com");
-/*
-		    // Get the first page
-		    HtmlPage page = wc.getPage("http://torn.com");
-		    //System.out.println(page.getWebResponse().getContentAsString());
-		    if (!isLoggedIn())
-		    	page = login(page, user.getUsername(), user.getPassword());
-		    else
-		    	System.out.println(this.user.getUsername()+"-"+"Already logged in.");
-*/		    	
-		    System.out.println(this.user.getUsername()+"-"+"Index.php loaded.");
 	        int loop = 0;
+	        
 		    while (action.isShouldRun() && this.errors < 4)
 		    {
 		    	loop++;
@@ -59,51 +101,13 @@ public class TornRoutine
 		    		if (!action.isLoggedIn())
 				    	page = action.login(page, user.getUsername(), user.getPassword());
 		    		//System.out.println(this.user.getUsername()+"-"+page.getWebResponse().getContentAsString());
-		    		if (page.asXml().toLowerCase().contains("you are travelling..."))
-		    			page = action.loadIndex();
-		    		if (action.onCaptcha(page))
-		    			page = action.solveCaptcha(page);
+		    		
+		    		if (routineType.equals(RoutineType.FLOWERS))
+		    			page = flowerRoutine(page, args);
+		    		else if (routineType.equals(RoutineType.SIMPLE))
+		    			page = simpleRoutine(page, args);
 		    		else
-		    		{
-			    		if (page.asText().toLowerCase().contains(TornConstants.travelling))
-			    		{	
-			    			System.out.println("Currently travelling. Sleeping 5 mins...");
-			    			Thread.sleep(1000*60*5);
-			    		}
-			    		else if (page.asText().toLowerCase().contains(TornConstants.atStoreAbroad))
-			    		{
-			    			/*
-			    			System.out.println("At store abroad.");
-			    			page = buyFlowers(page, 21);
-			    			page = travelHome(page);
-			    			System.out.println("Sleeping 15 minutes...");
-			    			Thread.sleep(1000*15*60);
-			    			*/
-			    			System.out.println("At store abroad.");
-			    			page = action.buyAnyFlowers(page, 21,flower_id);
-			    			page = action.travelHome(page);
-			    			System.out.println("Sleeping "+travel_time+" minutes...");
-			    			Thread.sleep(1000*travel_time*60);
-			    		}
-			    		else if (page.asText().toLowerCase().contains(TornConstants.atHome))
-			    		{
-			    			action.writeProfile(page.asXml());
-			    			action.writeItems(action.loadItems().asXml());
-			    			action.trainDefence(page, 20);
-			    			System.out.println("Starting new flower run");
-			    			//page = runFlowers(page, 21);
-			    			page = action.runAnyFlowers(page, 21,country_id,flower_id,travel_time);
-			    		}
-			    		else
-			    		{
-			    			System.out.println("ERROR. In unknown state");
-			    			System.out.println(page.getWebResponse().getContentAsString());
-			    			action.handlePageError(page);
-			    			this.errors++;
-			    		}
-			    			
-		    		}
-		    		System.out.println("Completed flower run.");
+		    			throw new Exception("Invalid Routine");
 		    	}
 		    	catch (Exception e)
 		    	{
@@ -126,7 +130,5 @@ public class TornRoutine
 			e.printStackTrace();
 			action.abort();
 		}
-		
-		
 	}
 }

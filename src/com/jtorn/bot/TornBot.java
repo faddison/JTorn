@@ -24,6 +24,7 @@ import javax.imageio.ImageReader;
 import com.DeathByCaptcha.Client;
 import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.html.*;
+import com.jtorn.bot.TornRoutine.RoutineType;
 
 public class TornBot extends Thread {
 
@@ -32,11 +33,10 @@ public class TornBot extends Thread {
 	public TornUser user;
 	private TornAction tornAction;
 	private TornRoutine routine;
-	
-	HashMap<String, String> countryMap;
-	HashMap<String, String> flowerMap;
+	private RoutineType routineType;
+	private String[] args;
 
-	public TornBot(TornUser user) 
+	public TornBot(TornUser user, RoutineType routineType, String[] args) 
 	{
 		//loadProperties();
 		this.user = user;
@@ -59,13 +59,15 @@ public class TornBot extends Thread {
 		cookieManager.setCookiesEnabled(true);
 		wc.setCookieManager(cookieManager);
 		this.routine = new TornRoutine(wc, user);
+		this.routineType = routineType;
+		this.args = args;
 	}
 	
 	public void run()
 	{
 		while (routine.getAction().isShouldRun())
 		{
-			routine.flowerRunning();
+			routine.mainRoutine(this.routineType, this.args);
 		}
 	}
 	
