@@ -35,6 +35,7 @@ public class TornRoutine
 	public HtmlPage simpleRoutine(HtmlPage page, String[] args) throws Exception
 	{
 		page = action.trainStrength(page, 20);
+		action.setShouldRun(false);
 		return page;
 	}
 	
