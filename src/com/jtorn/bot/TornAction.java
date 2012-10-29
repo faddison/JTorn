@@ -67,11 +67,11 @@ public class TornAction{
 		//System.out.println(page.getWebResponse().getContentAsString());
 	
 		HtmlImage captchaImage = (HtmlImage) page.getElementById("recaptcha_image").getFirstChild();
-		captchaImage.saveAs(new File("captcha-image.jpg"));
+		captchaImage.saveAs(new File("files/captcha-image.jpg"));
 	
 		
 		CaptchaSolver captchaSolver = new CaptchaSolver(new SocketClient(
-				"trialaccount", "Cappie1!"), "captcha-image.jpg");
+				"trialaccount", "Cappie1!"), "files/captcha-image.jpg");
 		captchaSolver.run();
 		Captcha captcha = captchaSolver.getCaptcha();
 	
