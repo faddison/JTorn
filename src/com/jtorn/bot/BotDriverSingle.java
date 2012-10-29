@@ -3,7 +3,7 @@ package com.jtorn.bot;
 import com.jtorn.bot.TornRoutine.RoutineType;
 
 
-public class BotDriver3
+public class BotDriverSingle
 {
 	public static void main(String[] args) 
 	{

@@ -2,13 +2,15 @@ package com.jtorn.bot;
 
 import java.util.ArrayList;
 
+import com.jtorn.bot.TornRoutine.RoutineType;
 
-public class BotDriver4
+
+public class BotDriverMulti
 {
 	public static void main(String[] args) throws InterruptedException 
 	{
 		System.out.println("Starting application...");
-		TornProxy proxy18 = new TornProxy("38.87.65.185", "3131", "754d539bc6ade1ad", "454585f105747a76");
+		TornProxy proxy18 = new TornProxy("23.29.56.185", "3131", "754d539bc6ade1ad", "454585f105747a76");
 		TornProxy proxy19 = new TornProxy("199.116.84.44", "3131", "754d539bc6ade1ad", "454585f105747a76");
 		TornProxy proxy20 = new TornProxy("216.172.139.50", "3131", "754d539bc6ade1ad", "454585f105747a76");
 		TornProxy proxy21 = new TornProxy("50.117.69.148", "3131", "754d539bc6ade1ad", "454585f105747a76");
@@ -27,16 +29,12 @@ public class BotDriver4
 		users.add(user21);
 		users.add(user22);
 		
-		while (true)
+		for (int i = 0; i < users.size(); i++)
 		{
-			for (int i = 0; i < users.size(); i++)
-			{
-				System.out.println("Running bot...");
-				TornBot4 bot = new TornBot4(users.get(i));
-				bot.run();
-			}
-			System.out.println("Cycle complete. Sleeping 60 mins...");
-			Thread.sleep(1000*60*60);
+			System.out.println("Running bot...");
+			TornBot botThread = new TornBot(users.get(i), RoutineType.SIMPLE, null);
+			botThread.start();
 		}
+		System.out.println("Cycle complete.");
 	}
 }
