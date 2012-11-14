@@ -31,16 +31,15 @@ public class Test {
 		
 	    // Get the first page
 	    //HtmlPage page = wc.getPage("file://D:/torncity/offline-gym.html");
-	    HtmlPage page = wc.getPage("file://D:/torncity/mexico-traveling.html");
+	    HtmlPage page = wc.getPage("file://D:/torncity/TORN-Homepage.html");
 	    //HtmlPage page = wc.getPage("file://D:/workspace/JTorn/files/offline-docrime2.html");
-	    
 //	    for (HtmlElement e: page.getElementsByTagName("center"))
 //		{
 ////			System.out.println(e.toString());
 ////			HtmlElement e2 = e.getElementById("t");
 //			System.out.println(e.asText());
 //		}
-	    
+	    /*
 	    String[] words = ((HtmlElement) page.getByXPath("/html/body/div[3]/center/table/tbody/tr/td/center").get(0)).asText().split(" ");
 	    int minutes = -1;
 		for (int i = 0; i < words.length; i++)
@@ -50,11 +49,11 @@ public class Test {
 	    		minutes = Integer.parseInt(words[i-1]);
 	    }
 	    System.out.println(minutes);
-	    
+	    */
 	    
 	    //System.out.println(page.asXml().contains(("Please Validate").toString()));
 	   // System.out.println(page.asXml());
-//	    System.out.println(page.getBody().asText());
+	    System.out.println(page.getBody().asText());
 	    
 	    /*
 	    for (DomNode n: page.getElementById("divStrength").getDescendants())

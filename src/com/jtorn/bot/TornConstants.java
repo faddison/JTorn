@@ -6,7 +6,7 @@ public final class TornConstants
 {
 	public static String travelling = "you are currently on the plane flying";
 	public static String atStoreAbroad = "travel home";
-	public static String atHome = "hallow town";
+	public static String atHome = "nerve";
 	public static String mexico = "2";
 	public static String hawaii = "3";
 	public static String united_kingdom = "10";

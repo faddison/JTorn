@@ -67,11 +67,11 @@ public class TornAction{
 		//System.out.println(page.getWebResponse().getContentAsString());
 	
 		HtmlImage captchaImage = (HtmlImage) page.getElementById("recaptcha_image").getFirstChild();
-		captchaImage.saveAs(new File("files/captcha-image.jpg"));
+		captchaImage.saveAs(new File("./files/captcha-image.jpg"));
 	
 		
 		CaptchaSolver captchaSolver = new CaptchaSolver(new SocketClient(
-				"trialaccount", "Cappie1!"), "files/captcha-image.jpg");
+				"trialaccount", "Cappie1!"), "./files/captcha-image.jpg");
 		captchaSolver.run();
 		Captcha captcha = captchaSolver.getCaptcha();
 	
@@ -271,7 +271,7 @@ public class TornAction{
 		if (submitInput == null)
 			throw new ElementNotFoundException("trainStrength", "submitInput",
 					"HtmlSubmitInput[<input type=\"submit\" value=\"Train\">]");
-
+		System.out.println("Strength successfully trained.");
 		return page;
 	}
 	
@@ -286,6 +286,11 @@ public class TornAction{
 	public HtmlPage loadItems() throws Exception
 	{
 		return wc.getPage("http://www.torn.com/item.php");
+	}
+	
+	public void writeError(String contents)
+	{
+		writePage("files/page-logs/errors", contents);
 	}
 	
 	public void writeItems(String contents)
@@ -363,7 +368,7 @@ public class TornAction{
 		page = loadIndex();
 		if (onCaptcha(page))
 			page = solveCaptcha(page);
-		writeAbroad(page.asXml());
+		writeAbroad(loadIndex().asXml());
 		page = wc
 				.getPage("http://www.torn.com/holder.php?case=buyItem&ID="+flowerId+"&action=confirm&jsoff=none&ID2=");
 		page = wc

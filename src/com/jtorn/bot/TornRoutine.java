@@ -34,7 +34,15 @@ public class TornRoutine
 	
 	public HtmlPage simpleRoutine(HtmlPage page, String[] args) throws Exception
 	{
-		page = action.trainStrength(page, 20);
+		if (args != null)
+		{
+			if (args[0].toLowerCase().contains("def"))
+				page = action.trainDefence(page, 20);
+			else
+				page = action.trainStrength(page, 20);
+		}
+		else
+			page = action.trainStrength(page, 20);
 		action.setShouldRun(false);
 		return page;
 	}
@@ -69,7 +77,6 @@ public class TornRoutine
 		}
 		else if (page.asText().toLowerCase().contains(TornConstants.atHome))
 		{
-			action.writeProfile(page.asXml());
 			action.writeItems(action.loadItems().asXml());
 			page = action.trainDefence(page, 20);
 			System.out.println("Starting new flower run...");
@@ -102,7 +109,7 @@ public class TornRoutine
 		    		if (!action.isLoggedIn())
 				    	page = action.login(page, user.getUsername(), user.getPassword());
 		    		//System.out.println(this.user.getUsername()+"-"+page.getWebResponse().getContentAsString());
-		    		
+		    		action.writeProfile(action.loadIndex().asXml());
 		    		if (routineType.equals(RoutineType.FLOWERS))
 		    			page = flowerRoutine(page, args);
 		    		else if (routineType.equals(RoutineType.SIMPLE))
@@ -115,6 +122,7 @@ public class TornRoutine
 		    		System.out.println(this.user.getUsername()+"-"+e.toString());
 		    		//System.out.println(page.getWebResponse().getContentAsString());
 		    		e.printStackTrace();
+		    		action.writeError(page.asXml());
 		    		if (!action.handlePageError(page))
 		    			this.errors++;
 		    		if (this.errors > 3)
