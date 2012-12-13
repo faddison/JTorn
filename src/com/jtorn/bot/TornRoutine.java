@@ -25,11 +25,25 @@ public class TornRoutine
 	{
 		return this.action;
 	}
-	
 
 	public enum RoutineType
 	{
-		FLOWERS, SIMPLE
+		FLOWERS, SIMPLE, LEVELUP
+	}
+	
+	public HtmlPage levelupRoutine(HtmlPage page, String[] args) throws Exception
+	{
+		page = action.loadIndex();
+		System.out.println("Checking for levelup...");
+		if (action.checkLevelup(page))
+		{
+			page = action.levelup(page);
+			System.out.println("Leveled up!");
+		}
+		else
+			action.setShouldRun(false);
+			
+		return page;
 	}
 	
 	public HtmlPage simpleRoutine(HtmlPage page, String[] args) throws Exception
@@ -110,12 +124,27 @@ public class TornRoutine
 				    	page = action.login(page, user.getUsername(), user.getPassword());
 		    		//System.out.println(this.user.getUsername()+"-"+page.getWebResponse().getContentAsString());
 		    		action.writeProfile(action.loadIndex().asXml());
-		    		if (routineType.equals(RoutineType.FLOWERS))
-		    			page = flowerRoutine(page, args);
-		    		else if (routineType.equals(RoutineType.SIMPLE))
-		    			page = simpleRoutine(page, args);
-		    		else
-		    			throw new Exception("Invalid Routine");
+		    		
+		    		switch (routineType)
+		    		{
+			    		case FLOWERS:
+			    		{
+			    			page = flowerRoutine(page, args);
+			    			break;
+			    		}
+			    		case SIMPLE:
+			    		{
+			    			page = simpleRoutine(page, args);
+			    			break;
+			    		}
+			    		case LEVELUP:
+			    		{
+			    			page = levelupRoutine(page, args);
+			    			break;
+			    		}
+			    		default:
+			    			throw new Exception("Invalid Routine");
+		    		}
 		    	}
 		    	catch (Exception e)
 		    	{

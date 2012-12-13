@@ -18,6 +18,7 @@ import com.DeathByCaptcha.SocketClient;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomNode;
+import com.gargoylesoftware.htmlunit.html.HtmlButton;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
@@ -48,7 +49,6 @@ public class TornAction{
 	{
 		return shouldRun;
 	}
-
 
 	/**
 	 * @param shouldRun the shouldRun to set
@@ -199,6 +199,22 @@ public class TornAction{
 		return result;
 	}
 
+	public boolean checkLevelup(HtmlPage page)
+	{
+		HtmlElement e = page.getElementById("btnUpgrade");
+		return (e != null);
+	}
+	
+	public HtmlPage levelup(HtmlPage page) throws IOException
+	{
+		HtmlElement e = page.getElementById("btnUpgrade");
+		String url = e.getAttribute("href");
+		page = wc.getPage("http://torn.com/"+url);
+		String[] urls = url.split("\\?");
+		String confirmUrl = urls[0]+"?confirm=1&"+urls[1];
+		page = wc.getPage("http://torn.com/"+confirmUrl);
+		return page;
+	}
 	
 	public boolean inJail(HtmlPage page) {
 		boolean result = (page.getElementById("icon16") != null);

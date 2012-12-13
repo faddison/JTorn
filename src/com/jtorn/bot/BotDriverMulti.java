@@ -2,8 +2,10 @@ package com.jtorn.bot;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 
 import com.jtorn.bot.TornRoutine.RoutineType;
+import com.jtorn.util.TornUtil;
 
 
 public class BotDriverMulti
@@ -38,6 +40,11 @@ public class BotDriverMulti
 		users.add(user22);
 		
 		Collections.shuffle(users);
+		// minutes
+		int sleepTime = 60;
+		// seconds
+		int threadTimeout = 180;
+		
 		while (true)
 		{
 			for (int i = 0; i < users.size(); i++)
@@ -45,11 +52,13 @@ public class BotDriverMulti
 				System.out.println("Running bot...");
 				TornBot botThread = new TornBot(users.get(i), RoutineType.SIMPLE, null);
 				botThread.start();
-				botThread.join();
+				botThread.join(threadTimeout * 1000);
 			}
-			System.out.println("Cycle complete.");
-			System.out.println("Sleeping 60 minutes...");
-			Thread.sleep(60*1000*60);
+			
+			System.out.println("Cycle completed at "+ TornUtil.getTime(TornConstants.timeDateFormat));
+			System.out.println("Sleeping for "+sleepTime+" minutes.");
+			System.out.println("Waking at "+ TornUtil.getTime(TornConstants.timeDateFormat, sleepTime));
+			Thread.sleep(sleepTime*1000*60);
 		}
 	}
 }
