@@ -85,6 +85,18 @@ public class TornAction{
 		return wc.getPage(url);
 	}
 	
+	public boolean checkMailbox(HtmlPage page)
+	{
+		return false;
+	}
+	
+	public boolean checkEvents(HtmlPage page)
+	{
+		return false;
+	}
+	
+	
+	
 	public int extractTravelMinutes(HtmlPage page)
 	{
 		System.out.println("Extracting remaining travel time...");
@@ -226,7 +238,17 @@ public class TornAction{
 	
 	public boolean onCaptcha(HtmlPage page) 
 	{
-		return page.asXml().toLowerCase().contains("please validate"); 
+		return checkXml(page, TornConstants.captcha); 
+	}
+	
+	public boolean checkXml(HtmlPage page, String text)
+	{
+		return page.asXml().toLowerCase().contains(text);
+	}
+	
+	public boolean checkText(HtmlPage page, String text)
+	{
+		return page.asText().toLowerCase().contains(text);
 	}
 	
 	public HtmlPage trainDefence(HtmlPage page, int amount) throws Exception {
