@@ -4,7 +4,9 @@ import java.text.SimpleDateFormat;
 
 public final class TornConstants
 {
-	public static String travelling = "you are currently on the plane flying";
+	public static String captcha = "please validate";
+	public static String onThePlane = "you are currently on the plane flying";
+	public static String youAreTraveling = "you are travelling...";
 	public static String atStoreAbroad = "travel home";
 	public static String atHome = "nerve";
 	public static String mexico = "2";

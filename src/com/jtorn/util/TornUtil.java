@@ -21,4 +21,19 @@ public class TornUtil
 		SimpleDateFormat dateFormat = new SimpleDateFormat(stringFormat);
 		return dateFormat.format(futureTime.getTime());
 	}
+	
+	public static String sleepMessage(int mins)
+	{
+		return "Sleeping for "+ mins +" minutes...";
+	}
+	
+	public static String wakeMessage(int mins)
+	{
+		return "Waking at "+ TornUtil.getTime(TornConstants.timeDateFormat, mins);
+	}
+	
+	public static String sleepWakeMessage(int mins)
+	{
+		return sleepMessage(mins)+'\n'+wakeMessage(mins);
+	}
 }

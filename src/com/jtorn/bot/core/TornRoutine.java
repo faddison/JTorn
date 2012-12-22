@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.jtorn.util.TornUtil;
 
 public class TornRoutine
 {
@@ -71,17 +72,17 @@ public class TornRoutine
 		String flower_id = args[1];
 		int travel_time = Integer.parseInt(args[2]);
 		
-		if (page.asXml().toLowerCase().contains("you are travelling..."))
+		if (action.checkXml(page, TornConstants.youAreTraveling))
 			page = action.loadIndex();
 		if (action.onCaptcha(page))
 			page = action.solveCaptcha(page);
-		if (page.asText().toLowerCase().contains(TornConstants.travelling))
+		if (action.checkText(page,TornConstants.onThePlane))
 		{	
-			logger.info("Currently travelling.");
+			logger.info(TornConstants.onThePlane);
 			int remainingTime = action.extractTravelMinutes(page);
 			if (remainingTime < 0)
 				remainingTime = 4;
-			logger.info("Sleeping for "+ (remainingTime+1) +" minutes...");
+			logger.info(TornUtil.sleepMessage(remainingTime+1));
 			Thread.sleep(1000*60*(remainingTime++));
 		}
 		else if (page.asText().toLowerCase().contains(TornConstants.atStoreAbroad))
