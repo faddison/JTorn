@@ -50,7 +50,7 @@ public class BotDriverMulti
 			for (int i = 0; i < users.size(); i++)
 			{
 				System.out.println("Running bot...");
-				TornBot botThread = new TornBot(users.get(i), RoutineType.SIMPLE, null);
+				TornBot botThread = new TornBot(users.get(i), RoutineType.LEVELUP, null);
 				botThread.start();
 				botThread.join(threadTimeout * 1000);
 			}

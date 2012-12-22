@@ -10,9 +10,9 @@ public class BotDriverSingle
 		System.out.println("Creating the bot threads...");
 		TornProxy proxy = null;
 		TornUser user = new TornUser("trialaccount", "trial1!", "fastslip@gmail.com", proxy);
-		String[] botArgs = {TornConstants.united_kingdom, 
-						 TornConstants.heather, 
-						 Integer.toString(TornConstants.time_united_kingdom)};
+		String[] botArgs = {TornConstants.cayman_islands, 
+						 TornConstants.banana_orchid, 
+						 Integer.toString(TornConstants.time_cayman_islands)};
 		Thread botThread =  new TornBot(user, RoutineType.FLOWERS, botArgs);
 	while (true)
 	{
