@@ -1,7 +1,9 @@
-package com.jtorn.bot;
+package com.jtorn.bot.core;
 
 import java.util.Date;
 import java.util.logging.Level;
+
+import org.apache.log4j.Logger;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -13,6 +15,7 @@ public class TornRoutine
 	private TornUser user;
 	private boolean shouldRun = true;
 	private int errors = 0;
+	private static Logger logger = Logger.getLogger(TornRoutine.class);
 	
 	public TornRoutine(WebClient wc, TornUser user)
 	{
@@ -34,11 +37,11 @@ public class TornRoutine
 	public HtmlPage levelupRoutine(HtmlPage page, String[] args) throws Exception
 	{
 		page = action.loadIndex();
-		System.out.println("Checking for levelup...");
+		logger.info("Checking for levelup...");
 		if (action.checkLevelup(page))
 		{
 			page = action.levelup(page);
-			System.out.println("Leveled up!");
+			logger.info("Leveled up!");
 		}
 		else
 			action.setShouldRun(false);
@@ -74,31 +77,31 @@ public class TornRoutine
 			page = action.solveCaptcha(page);
 		if (page.asText().toLowerCase().contains(TornConstants.travelling))
 		{	
-			System.out.println("Currently travelling.");
+			logger.info("Currently travelling.");
 			int remainingTime = action.extractTravelMinutes(page);
 			if (remainingTime < 0)
 				remainingTime = 4;
-			System.out.println("Sleeping for "+ (remainingTime+1) +" minutes...");
+			logger.info("Sleeping for "+ (remainingTime+1) +" minutes...");
 			Thread.sleep(1000*60*(remainingTime++));
 		}
 		else if (page.asText().toLowerCase().contains(TornConstants.atStoreAbroad))
 		{
-			System.out.println("At store abroad.");
+			logger.info("At store abroad.");
 			page = action.buyAnyFlowers(page, 21,flower_id);
 			page = action.travelHome(page);
-			System.out.println("Sleeping "+travel_time+" minutes...");
+			logger.info("Sleeping "+travel_time+" minutes...");
 			Thread.sleep(1000*travel_time*60);
 		}
 		else if (page.asText().toLowerCase().contains(TornConstants.atHome))
 		{
 			action.writeItems(action.loadItems().asXml());
 			page = action.trainDefence(page, 20);
-			System.out.println("Starting new flower run...");
+			logger.info("Starting new flower run...");
 			page = action.runAnyFlowers(page, 21,country_id,flower_id,travel_time);
 		}
 		else
 			throw new Exception("Unknown State");
-		System.out.println("Completed flower run.");
+		logger.info("Completed flower run.");
 		return page;
 	}
 	
@@ -106,23 +109,23 @@ public class TornRoutine
 	{	
 		try
 		{
-			System.out.println(this.user.getUsername()+"-"+"Starting application...");
+			logger.info(this.user.getUsername()+"-"+"Starting application...");
 			java.util.logging.Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF);
-			System.out.println(this.user.getUsername()+"-"+"Loading Torn...");
+			logger.info(this.user.getUsername()+"-"+"Loading Torn...");
 			HtmlPage page = wc.getPage("http://torn.com");
 	        int loop = 0;
 	        
 		    while (action.isShouldRun() && this.errors < 4)
 		    {
 		    	loop++;
-		    	System.out.println(this.user.getUsername()+"-"+"Beginning loop "+loop+" at "+TornConstants.getTimeDateFormat().format(new Date()));
+		    	logger.info(this.user.getUsername()+"-"+"Beginning loop "+loop+" at "+TornConstants.getTimeDateFormat().format(new Date()));
 		    	try
 		    	{
-		    		//System.out.println(this.user.getUsername()+"-"+page.getWebResponse().getContentAsString());
+		    		//logger.info(this.user.getUsername()+"-"+page.getWebResponse().getContentAsString());
 		    		page = action.loadIndex();
 		    		if (!action.isLoggedIn())
 				    	page = action.login(page, user.getUsername(), user.getPassword());
-		    		//System.out.println(this.user.getUsername()+"-"+page.getWebResponse().getContentAsString());
+		    		//logger.info(this.user.getUsername()+"-"+page.getWebResponse().getContentAsString());
 		    		action.writeProfile(action.loadIndex().asXml());
 		    		
 		    		switch (routineType)
@@ -148,8 +151,8 @@ public class TornRoutine
 		    	}
 		    	catch (Exception e)
 		    	{
-		    		System.out.println(this.user.getUsername()+"-"+e.toString());
-		    		//System.out.println(page.getWebResponse().getContentAsString());
+		    		logger.info(this.user.getUsername()+"-"+e.toString());
+		    		//logger.info(page.getWebResponse().getContentAsString());
 		    		e.printStackTrace();
 		    		action.writeError(page.asXml());
 		    		if (!action.handlePageError(page))
@@ -158,13 +161,13 @@ public class TornRoutine
 		    			action.abort();
 		    	}
 		    }
-		    System.out.println(this.user.getUsername()+"-"+"Thread terminated!");
+		    logger.info(this.user.getUsername()+"-"+"Thread terminated!");
 		    return;
 		    
 		}
 		catch (Exception e)
 		{
-			System.out.println(this.user.getUsername()+"-"+e.toString());
+			logger.info(this.user.getUsername()+"-"+e.toString());
 			e.printStackTrace();
 			action.abort();
 		}

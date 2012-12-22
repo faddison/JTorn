@@ -1,18 +1,22 @@
-package com.jtorn.bot;
+package com.jtorn.bot.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
-import com.jtorn.bot.TornRoutine.RoutineType;
+import org.apache.log4j.Logger;
+
+import com.jtorn.bot.core.TornRoutine.RoutineType;
 import com.jtorn.util.TornUtil;
 
 
 public class BotDriverMulti
 {
+	private static Logger logger = Logger.getLogger(BotDriverMulti.class);
+	
 	public static void main(String[] args) throws InterruptedException 
 	{
-		System.out.println("Starting application...");
+		logger.info("Starting application...");
 		// 142.54.170.231 not working
 		
 		// slow
@@ -49,15 +53,15 @@ public class BotDriverMulti
 		{
 			for (int i = 0; i < users.size(); i++)
 			{
-				System.out.println("Running bot...");
+				logger.info("Running bot...");
 				TornBot botThread = new TornBot(users.get(i), RoutineType.SIMPLE, null);
 				botThread.start();
 				botThread.join(threadTimeout * 1000);
 			}
 			
-			System.out.println("Cycle completed at "+ TornUtil.getTime(TornConstants.timeDateFormat));
-			System.out.println("Sleeping for "+sleepTime+" minutes.");
-			System.out.println("Waking at "+ TornUtil.getTime(TornConstants.timeDateFormat, sleepTime));
+			logger.info("Cycle completed at "+ TornUtil.getTime(TornConstants.timeDateFormat));
+			logger.info("Sleeping for "+sleepTime+" minutes.");
+			logger.info("Waking at "+ TornUtil.getTime(TornConstants.timeDateFormat, sleepTime));
 			Thread.sleep(sleepTime*1000*60);
 		}
 	}

@@ -1,4 +1,4 @@
-package com.jtorn.bot;
+package com.jtorn.bot.core;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
+import org.apache.log4j.Logger;
 
 import com.DeathByCaptcha.Captcha;
 import com.DeathByCaptcha.SocketClient;
@@ -34,6 +36,7 @@ public class TornAction{
 	private TornUser user;
 	private int errors = 0;
 	private boolean shouldRun = true;
+	private static Logger logger = Logger.getLogger(TornRoutine.class);
 	
 	
 	public TornAction(WebClient webClient, TornUser user)
@@ -61,10 +64,10 @@ public class TornAction{
 
 	public HtmlPage solveCaptcha(HtmlPage page) throws Exception {
 		wc.setJavaScriptEnabled(true);
-		System.out.println(user.getUsername() + "-" + "Solving captcha...");
+		logger.info(user.getUsername() + "-" + "Solving captcha...");
 		String url = page.getUrl().toString();
 		page = wc.getPage(url + "?bypass=1");
-		//System.out.println(page.getWebResponse().getContentAsString());
+		//logger.info(page.getWebResponse().getContentAsString());
 	
 		HtmlImage captchaImage = (HtmlImage) page.getElementById("recaptcha_image").getFirstChild();
 		captchaImage.saveAs(new File("./files/captcha-image.jpg"));
@@ -80,26 +83,26 @@ public class TornAction{
 		textField.setValueAttribute(captcha.text);
 		HtmlElement element = (HtmlElement) page.getElementByName("submit");
 		page = element.click();
-		System.out.println(user.getUsername() + "-" + "Captcha entered.");
+		logger.info(user.getUsername() + "-" + "Captcha entered.");
 		wc.setJavaScriptEnabled(false);
 		return wc.getPage(url);
 	}
 	
 	public int extractTravelMinutes(HtmlPage page)
 	{
-		System.out.println("Extracting remaining travel time...");
+		logger.info("Extracting remaining travel time...");
 		String[] words = ((HtmlElement) page.getByXPath("/html/body/div[3]/center/table/tbody/tr/td/center").get(0)).asText().split(" ");
 	    int minutes = -1;
 		for (int i = 0; i < words.length; i++)
 	    {
-			//System.out.println(words[i]);
+			//logger.info(words[i]);
 	    	if (words[i].toLowerCase().contains("minute"))
 	    		minutes = Integer.parseInt(words[i-1]);
 	    }
 		if (minutes > -1)
-			System.out.println("Eta is "+ minutes+" minutes.");
+			logger.info("Eta is "+ minutes+" minutes.");
 		else 
-			System.out.println("Unable to extract Eta.");
+			logger.info("Unable to extract Eta.");
 	    return minutes;
 	}
 	
@@ -114,10 +117,10 @@ public class TornAction{
 				if (attempts > 3 || this.errors > 3)
 					abort();
 				attempts++;
-				System.out.println(this.user.getUsername() + "-"
+				logger.info(this.user.getUsername() + "-"
 						+ "Logging in... (Attempt " + attempts + ")");
 				page = wc.getPage("http://torn.com/login");
-				// System.out.println(page.getWebResponse().getContentAsString());
+				// logger.info(page.getWebResponse().getContentAsString());
 				final HtmlForm form = page.getFormByName("login");
 				HtmlSubmitInput button = form.getInputByName("btnLogin");
 				HtmlTextInput textField = form.getInputByName("player");
@@ -126,7 +129,7 @@ public class TornAction{
 						.getInputByName("password");
 				passwordField.setValueAttribute(password);
 				page = button.click();
-				// System.out.println(page.getWebResponse().getContentAsString());
+				// logger.info(page.getWebResponse().getContentAsString());
 				if (isLoggedIn())
 					loggedIn = true;
 			} 
@@ -149,7 +152,7 @@ public class TornAction{
 	
 	public HtmlPage loadIndex() 
 	{
-		System.out.println(this.user.getUsername() + "-" + "Loading Index...");
+		logger.info(this.user.getUsername() + "-" + "Loading Index...");
 		try {
 			return wc.getPage("http://torn.com/index.php");
 		} catch (Exception e) {
@@ -160,25 +163,25 @@ public class TornAction{
 	
 	public boolean handlePageError(HtmlPage page) throws Exception 
 	{
-		System.out.println("Attemping to determine and rectify state...");
+		logger.info("Attemping to determine and rectify state...");
 		if (!isLoggedIn()) {
 			login(page, user.getUsername(), user.getPassword());
 			return true;
 		} else if (inHospital(page)) {
 			while (inHospital(page)) {
-				System.out.println("You are in the hospital.");
+				logger.info("You are in the hospital.");
 				Thread.sleep(1000 * 60 * 5);
 			}
 			return true;
 		} else if (inJail(page)) {
 			while (inJail(page)) {
-				System.out.println("You are in jail.");
+				logger.info("You are in jail.");
 			}
 			return true;
 		} else if (onCaptcha(page)) {
 			while (onCaptcha(page)) {
 				wc.setJavaScriptEnabled(true);
-				System.out.println(this.user.getUsername() + "-"
+				logger.info(this.user.getUsername() + "-"
 						+ "Captcha encountered.");
 				page = solveCaptcha(page);
 				wc.setJavaScriptEnabled(false);
@@ -195,7 +198,7 @@ public class TornAction{
 		boolean result = e.getAttribute("title").toLowerCase()
 				.contains("hospital");
 		if (result)
-			System.out.println(this.user.getUsername() + "-" + "In hospital.");
+			logger.info(this.user.getUsername() + "-" + "In hospital.");
 		return result;
 	}
 
@@ -219,7 +222,7 @@ public class TornAction{
 	public boolean inJail(HtmlPage page) {
 		boolean result = (page.getElementById("icon16") != null);
 		if (result)
-			System.out.println(this.user.getUsername() + "-" + "In jail.");
+			logger.info(this.user.getUsername() + "-" + "In jail.");
 		return result;
 
 	}
@@ -230,24 +233,24 @@ public class TornAction{
 	}
 	
 	public HtmlPage trainDefence(HtmlPage page, int amount) throws Exception {
-		System.out.println("Training " + amount + " defence...");
+		logger.info("Training " + amount + " defence...");
 		page = wc.getPage("http://torn.com/gym.php");
 		if (onCaptcha(page))
 			page = solveCaptcha(page);
-		// System.out.println(page.getWebResponse().getContentAsString());
+		// logger.info(page.getWebResponse().getContentAsString());
 		HtmlTextInput textInput = null;
 		HtmlSubmitInput submitInput = null;
 		for (DomNode n : page.getElementById("divDefence").getDescendants()) {
-			// System.out.println(n.toString());
+			// logger.info(n.toString());
 			if (n.toString().contains("id=\"t\" name=\"t\">]")) {
 				textInput = (HtmlTextInput) n;
 				textInput.setValueAttribute(Integer.toString(amount));
-				// System.out.println(textInput.toString());
+				// logger.info(textInput.toString());
 			} else if (n.toString().contains(
 					"HtmlSubmitInput[<input type=\"submit\" value=\"Train\">]")) {
 				submitInput = (HtmlSubmitInput) n;
 				page = submitInput.click();
-				// System.out.println(submitInput.toString());
+				// logger.info(submitInput.toString());
 			}
 		}
 		if (textInput == null)
@@ -261,24 +264,24 @@ public class TornAction{
 	}
 	
 	public HtmlPage trainStrength(HtmlPage page, int amount) throws Exception {
-		System.out.println("Training " + amount + " Strength...");
+		logger.info("Training " + amount + " Strength...");
 		page = wc.getPage("http://torn.com/gym.php");
 		if (onCaptcha(page))
 			page = solveCaptcha(page);
-		// System.out.println(page.getWebResponse().getContentAsString());
+		// logger.info(page.getWebResponse().getContentAsString());
 		HtmlTextInput textInput = null;
 		HtmlSubmitInput submitInput = null;
 		for (DomNode n : page.getElementById("divStrength").getDescendants()) {
-			// System.out.println(n.toString());
+			// logger.info(n.toString());
 			if (n.toString().contains("id=\"t\" name=\"t\">]")) {
 				textInput = (HtmlTextInput) n;
 				textInput.setValueAttribute(Integer.toString(amount));
-				// System.out.println(textInput.toString());
+				// logger.info(textInput.toString());
 			} else if (n.toString().contains(
 					"HtmlSubmitInput[<input type=\"submit\" value=\"Train\">]")) {
 				submitInput = (HtmlSubmitInput) n;
 				page = submitInput.click();
-				// System.out.println(submitInput.toString());
+				// logger.info(submitInput.toString());
 			}
 		}
 		if (textInput == null)
@@ -287,13 +290,13 @@ public class TornAction{
 		if (submitInput == null)
 			throw new ElementNotFoundException("trainStrength", "submitInput",
 					"HtmlSubmitInput[<input type=\"submit\" value=\"Train\">]");
-		System.out.println("Strength successfully trained.");
+		logger.info("Strength successfully trained.");
 		return page;
 	}
 	
 	public void abort() 
 	{
-		System.out.println(this.user.getUsername() + "-"
+		logger.info(this.user.getUsername() + "-"
 				+ "Too many errors encountered. Aborting all operations");
 		wc.closeAllWindows();
 		setShouldRun(false);
@@ -355,11 +358,11 @@ public class TornAction{
 	public HtmlPage runAnyFlowers(HtmlPage page, int amount, String countryId, String flowerId, int time) throws Exception
 	{
 		page = travelAbroad(page, countryId);
-		System.out.println("Sleeping "+time+" minutes...");
+		logger.info("Sleeping "+time+" minutes...");
 		Thread.sleep(1000*time*60);
 		page = buyAnyFlowers(page, 21, flowerId);
 		page = travelHome(page);
-		System.out.println("Sleeping "+time+" minutes...");
+		logger.info("Sleeping "+time+" minutes...");
 		Thread.sleep(1000*time*60);
 
 		return page;
@@ -368,7 +371,7 @@ public class TornAction{
 	
 	public HtmlPage travelHome(HtmlPage page) throws Exception {
 		page = loadIndex();
-		System.out.println("Traveling Home...");
+		logger.info("Traveling Home...");
 		page = wc.getPage("http://www.torn.com/holder.php?case=travelAgency&ID=63&action=travelback&jsoff=none&ID2=");
 		//page = wc.getPage("http://www.torn.com/holder.php?case=travelAgency&ID=2&action=travelback&jsoff=none&ID2=0&value=");
 		page = wc.getPage("http://www.torn.com/holder.php?case=travelAgency&ID=2&action=travelback2&jsoff=none&ID2=0&value=");
@@ -378,7 +381,7 @@ public class TornAction{
 	
 	public HtmlPage buyAnyFlowers(HtmlPage page, int amount, String flowerId) throws Exception 
 	{
-		System.out.println("Buying flowers...");
+		logger.info("Buying flowers...");
 		if (!isLoggedIn())
 			login(page, user.getUsername(), user.getPassword());
 		page = loadIndex();
@@ -402,9 +405,9 @@ public class TornAction{
 
 	public HtmlPage travelAbroad(HtmlPage page, String countryId) throws Exception 
 	{
-		System.out.println("Traveling Abroad...");
+		logger.info("Traveling Abroad...");
 		page = wc.getPage("http://www.torn.com/travelagency.php");
-		//System.out.println(page.asXml());
+		//logger.info(page.asXml());
 		if (onCaptcha(page))
 		{
 			solveCaptcha(page);

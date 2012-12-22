@@ -1,4 +1,4 @@
-package com.jtorn.bot;
+package com.jtorn.bot.core;
 
 import java.io.BufferedWriter;
 
@@ -24,7 +24,7 @@ import javax.imageio.ImageReader;
 import com.DeathByCaptcha.Client;
 import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.html.*;
-import com.jtorn.bot.TornRoutine.RoutineType;
+import com.jtorn.bot.core.TornRoutine.RoutineType;
 
 public class TornBot extends Thread {
 
@@ -49,6 +49,7 @@ public class TornBot extends Thread {
 			final DefaultCredentialsProvider scp = new DefaultCredentialsProvider();
 			scp.addCredentials(proxy.getUsername(), proxy.getPassword());
 			wc.setCredentialsProvider(scp);
+			
 		}
 		// JavaScript throws major errors on site.
 		wc.setJavaScriptEnabled(false);

@@ -1,4 +1,4 @@
-package com.jtorn.bot;
+package com.jtorn.bot.core;
 
 public class TornProxy 
 {

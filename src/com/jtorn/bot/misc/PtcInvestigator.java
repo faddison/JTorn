@@ -14,7 +14,7 @@ import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.jtorn.bot.TornAction;
+import com.jtorn.bot.core.TornAction;
 import com.jtorn.util.Utility;
 
 public class PtcInvestigator

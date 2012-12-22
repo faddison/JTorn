@@ -13,7 +13,7 @@ import com.DeathByCaptcha.Client;
 import com.DeathByCaptcha.SocketClient;
 import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.html.*;
-import com.jtorn.bot.CaptchaSolver;
+import com.jtorn.bot.core.CaptchaSolver;
 
 public class TestDriverFra 
 {

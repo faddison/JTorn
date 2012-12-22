@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.jtorn.bot.TornConstants;
+import com.jtorn.bot.core.TornConstants;
 
 public class TornUtil
 {

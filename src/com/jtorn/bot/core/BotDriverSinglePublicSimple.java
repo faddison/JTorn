@@ -1,6 +1,6 @@
-package com.jtorn.bot;
+package com.jtorn.bot.core;
 
-import com.jtorn.bot.TornRoutine.RoutineType;
+import com.jtorn.bot.core.TornRoutine.RoutineType;
 
 
 public class BotDriverSinglePublicSimple

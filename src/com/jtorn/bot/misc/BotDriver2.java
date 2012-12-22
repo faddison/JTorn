@@ -7,9 +7,9 @@ import java.util.Properties;
 import java.util.Stack;
 import java.util.concurrent.Executor;
 
-import com.jtorn.bot.TornBot;
-import com.jtorn.bot.TornProxy;
-import com.jtorn.bot.TornUser;
+import com.jtorn.bot.core.TornBot;
+import com.jtorn.bot.core.TornProxy;
+import com.jtorn.bot.core.TornUser;
 
 public class BotDriver2 {
 
